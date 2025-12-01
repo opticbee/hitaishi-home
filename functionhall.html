@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Premium function halls for weddings, corporate events & parties across multiple locations. Book luxurious venues with Hitashi Real Estate.">
+    <title>Luxury Function Halls & Event Venues | Hitashi Real Estate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+     <!-- Top Navigation -->
+     <nav style="background-color: #a621db; color: white; padding: 15px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; max-width: 1200px; margin: auto;">
+          <a href="index.html" style="color: white; font-size: 24px; text-decoration: none;">
+            <i class="fas fa-house"></i> Hitaishi Homes
+          </a>
+  
+          <!-- <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="search" placeholder="Search property..." style="padding: 8px; border: none; border-radius: 5px 0 0 5px;">
+            <button style="padding: 8px 12px; background: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer;">
+              <i class="fa fa-search" style="color: rgb(243, 151, 114);"></i>
+            </button>
+          </div> -->
+  
+  
+          <!-- search -->
+          <div style="display: flex; align-items: center; gap: 10px; position: relative; min-width: 200px; max-width: 500px;">
+              <input type="search" id="searchInput" placeholder="Search property..." 
+                     style="padding: 8px; border: none; border-radius: 5px 0 0 5px; width: 160px;">
+              <button id="searchButton" 
+                      style="padding: 8px 12px; background: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer;">
+                <i class="fa fa-search" style="color: rgb(243, 151, 114);"></i>
+              </button>
+              <!-- <div id="suggestions" 
+                   style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; color: black; z-index: 1000; max-height: 250px;  box-shadow: 0 4px 8px rgba(0,0,0,0.1); box-sizing: border-box; border-radius: 0 0 5px 5px;">
+              </div> -->
+            </div>
+            
+          
+          <script>
+              // Comprehensive search index with proper URLs
+              const searchIndex = [
+                  // Property Types
+                  { keyword: 'house', url: 'Buy.html?type=house' },
+                  { keyword: 'apartment', url: 'highriseapartments.html' },
+                  { keyword: 'villa', url: 'villas.html' },
+                  { keyword: 'plot', url: 'lands.html' },
+                  { keyword: 'commercial', url: 'commercial.html' },
+                  { keyword: 'farmhouse', url: 'farmhouse.html' },
+                  { keyword: 'shop', url: 'commercial.html?type=shop' },
+                  { keyword: 'land', url: 'lands.html' },
+                  { keyword: 'flat', url: 'Buy.html?type=flat' },
+                  { keyword: 'penthouse', url: 'Buy.html?type=penthouse' },
+                  { keyword: 'duplex', url: 'Buy.html?type=duplex' },
+              
+                  // Cities
+                  { keyword: 'mumbai', url: 'Buy.html?city=mumbai' },
+                  { keyword: 'delhi', url: 'Buy.html?city=delhi' },
+                  { keyword: 'bangalore', url: 'Buy.html?city=bangalore' },
+                  { keyword: 'chennai', url: 'Buy.html?city=chennai' },
+                  { keyword: 'hyderabad', url: 'Buy.html?city=hyderabad' },
+                  { keyword: 'pune', url: 'Buy.html?city=pune' },
+                  { keyword: 'kolkata', url: 'Buy.html?city=kolkata' },
+              
+                  // Features
+                  { keyword: 'furnished', url: 'Buy.html?feature=furnished' },
+                  { keyword: 'ready to move', url: 'Buy.html?feature=ready' },
+                  { keyword: 'luxury', url: 'villas.html' },
+              
+                  // Services
+                  { keyword: 'buy', url: 'Buy.html' },
+                  { keyword: 'sell', url: 'Sell.html' },
+                  { keyword: 'rent', url: 'Rent.html' },
+                  { keyword: 'loan', url: 'services.html#loan' },
+                  { keyword: 'legal', url: 'services.html#legal' },
+              
+                  // Pages
+                  { keyword: 'about', url: 'about.html' },
+                  { keyword: 'contact', url: 'contact.html' },
+                  { keyword: 'login', url: 'login.html' },
+                  { keyword: 'register', url: 'register.html' }
+              ];
+              
+              // Search function
+              function performSearch(query) {
+                  query = query.toLowerCase().trim();
+                  if (!query) return [];
+              
+                  const terms = query.split(' ');
+                  const matches = searchIndex.filter(item => {
+                      const itemKeywords = item.keyword.toLowerCase().split(' ');
+                      return terms.some(term =>
+                          itemKeywords.some(kw => kw.includes(term))
+                      );
+                  });
+              
+                  matches.sort((a, b) => {
+                      const aExact = a.keyword.toLowerCase() === query;
+                      const bExact = b.keyword.toLowerCase() === query;
+                      return bExact - aExact || b.keyword.length - a.keyword.length;
+                  });
+              
+                  return matches;
+              }
+              
+              // Handle search action
+              function handleSearch() {
+                  const query = document.getElementById('searchInput').value;
+                  const matches = performSearch(query);
+              
+                  if (matches.length > 0) {
+                      window.location.href = matches[0].url;
+                  } else {
+                      window.location.href = `Buy.html?search=${encodeURIComponent(query)}`;
+                  }
+              }
+              
+              // Show autocomplete suggestions
+              function showSuggestions(query) {
+                  const suggestions = performSearch(query);
+                  const container = document.getElementById('suggestions');
+                  container.innerHTML = '';
+              
+                  if (suggestions.length === 0) {
+                      container.style.display = 'none';
+                      return;
+                  }
+              
+                  suggestions.slice(0, 5).forEach(item => {
+                      const div = document.createElement('div');
+                      div.textContent = item.keyword;
+                      div.style.padding = '8px 16px';
+                      div.style.cursor = 'pointer';
+                      div.style.borderBottom = '1px solid #eee';
+                      div.style.background = 'white';
+                      div.onclick = () => window.location.href = item.url;
+                      div.onmouseover = () => div.style.background = '#f5f5f5';
+                      div.onmouseout = () => div.style.background = 'white';
+                      container.appendChild(div);
+                  });
+              
+                  container.style.display = 'block';
+              }
+              
+              // Event listeners
+              document.getElementById('searchButton').addEventListener('click', handleSearch);
+              document.getElementById('searchInput').addEventListener('input', function () {
+                  showSuggestions(this.value);
+              });
+              document.getElementById('searchInput').addEventListener('keypress', function (e) {
+                  if (e.key === 'Enter') handleSearch();
+              });
+              
+              // Hide suggestions on click outside
+              document.addEventListener('click', function (e) {
+                  if (!e.target.closest('#searchInput') && !e.target.closest('#suggestions')) {
+                      document.getElementById('suggestions').style.display = 'none';
+                  }
+              });
+              
+              // Prevent body scroll when input is focused (optional)
+              document.getElementById('searchInput').addEventListener('focus', () => {
+                  document.body.style.overflow = 'hidden';
+              });
+              document.getElementById('searchInput').addEventListener('blur', () => {
+                  setTimeout(() => { // delay to allow click on suggestion
+                      document.body.style.overflow = '';
+                  }, 200);
+              });
+          </script>
+  
+  
+  
+  
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="builders.html" style="color: black; text-decoration: none; font-size: 16px;">Real Estate Builders</a>
+            <a href="highriseapartments.html" style="color: black; text-decoration: none; font-size: 16px;">High Rise Apartments</a>
+            <a href="Sell.html" style="color: black; text-decoration: none; font-size: 16px;">
+              Post Property <i class="fas fa-paper-plane"></i>
+            </a>
+          </div>
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="#" title="Facebook" style="color: white; font-size: 28px;"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Twitter" style="color: white; font-size: 28px;"><i class="fab fa-twitter"></i></a>
+            <a href="#" title="Instagram" style="color: white; font-size: 28px;"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="LinkedIn" style="color: white; font-size: 28px;"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" title="YouTube" style="color: white; font-size: 28px;"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </nav>
+
+  <!-- Bottom Navigation -->
+  <nav style="background-color: #ebefa0; position: sticky; top: 0; z-index: 1000;">
+    <div style="max-width: 1200px; margin: auto; padding: 10px 15px;">
+      <ul style="display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; justify-content: center; gap: 15px;">
+        <li style="position: relative;">
+          <a href="index.html" style="text-decoration: none; color: #000; padding: 10px; display: block;">Home</a>
+        </li>
+
+        <li style="position: relative;">
+          <a href="Buy.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Buy <i class="fas fa-angle-down"></i></a>
+          <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+            <li><a href="Buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+            <li><a href="buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Plots</a></li>
+            <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+            <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+            <li><a href="buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Shops</a></li>
+            <li><a href="find_agent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Ready to move</a></li>
+            <li><a href="buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+            <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Commercial</a></li>
+            <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Agriculture Lands</a></li>
+            <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+          </ul>
+        </li>
+
+        <li style="position: relative;">
+          <a href="Sell.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Sell <i class="fas fa-angle-down"></i></a>
+          <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+            <li><a href="postRent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Post Property</a></li>
+            <li><a href="postRent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Dashboard</a></li>
+            <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+            <li><a href="Sell.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+            <li><a href="Sell.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Plots</a></li>
+            <li><a href="Sell.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+            <li><a href="find_agent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Ready to move</a></li>
+            <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Commercial</a></li>
+            <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Farm Houses</a></li>
+            <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+          </ul>
+        </li>
+
+        <li style="position: relative;">
+          <a href="Rent.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Rent <i class="fas fa-angle-down"></i></a>
+          <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+            <li><a href="Rent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+            <li><a href="highriseapartments.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+            <li><a href="Rent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+            <li><a href="Rent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+            <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Farm Houses</a></li>
+            <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+            <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Commercial</a></li>
+          </ul>
+        </li>
+
+        
+
+          <li style="position: relative;">
+                  <a href="villas.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Villas<i class="fas fa-angle-down"></i></a>
+                  <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+                      <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+                      <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+                      <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Plots</a></li>
+                      <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+                      <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Shop</a></li>
+                      <li><a href="find_agent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Ready to move</a></li>
+                      <li><a href="Buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+                  </ul>
+          </li>
+
+
+          <li style="position: relative;">
+                  <a href="commercial.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Commercial<i class="fas fa-angle-down"></i></a>
+                  <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+                      <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+                      <li><a href="malls.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Malls</a></li>
+                      <li><a href="hospital.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Hospitals</a></li>
+                      <li><a href="office.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Offices</a></li>
+                      <li><a href="retails.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Retails</a></li>
+                      <li><a href="functionhall.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Function Halls</a></li>
+                      <li><a href="landdevelopment.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Land Developments</a></li>
+                  </ul>
+          </li>
+              
+          <li style="position: relative;">
+                  <a href="farmhouse.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Farm Houses<i class="fas fa-angle-down"></i></a>
+                  <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+                      <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Farm Houses</a></li>
+                      <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+                 </ul>
+          </li>
+
+          <li style="position: relative;">
+            <a href="lands.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Agriculture Lands</a>
+          </li>
+
+          <li style="position: relative;">
+            <a href="about.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">About Us</a>
+          </li>
+
+          <li style="position: relative;">
+              <a href="contact.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Contact Us</a>
+          </li>
+
+          <li style="position: relative;">
+            <a href="login.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Login</a>
+            <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+              <li><a href="Login.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Login</a></li>
+              <li><a href="register.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Register</a></li>
+            </ul>
+          </li>
+
+      </ul>
+    </div>
+  </nav>
+  <script>
+      document.querySelectorAll('nav ul li').forEach(li => {
+        li.addEventListener('mouseenter', () => {
+          const submenu = li.querySelector('ul');
+          if (submenu) submenu.style.display = 'block';
+        });
+        li.addEventListener('mouseleave', () => {
+          const submenu = li.querySelector('ul');
+          if (submenu) submenu.style.display = 'none';
+        });
+      });
+  </script>
+
+
+<!-- Hero Section with Reduced Overlay -->
+<section style="position:relative;min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;text-align:center;padding:20px;overflow:hidden;">
+    <!-- Background Images Container -->
+    <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;">
+        <!-- First Background Image -->
+        <div style="position:absolute;width:100%;height:100%;background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url('images/background image21.png') center/cover no-repeat;animation:slideAnimation 16s infinite 0s;"></div>
+        <!-- Second Background Image -->
+        <div style="position:absolute;width:100%;height:100%;background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url('images/background image22.png') center/cover no-repeat;animation:slideAnimation 16s infinite 4s;"></div>
+        <!-- Third Background Image -->
+        <div style="position:absolute;width:100%;height:100%;background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url('images/background image23.png') center/cover no-repeat;animation:slideAnimation 16s infinite 8s;"></div>
+        <!-- Fourth Background Image -->
+        <div style="position:absolute;width:100%;height:100%;background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url('images/background\ image24\ copy.png') center/cover no-repeat;animation:slideAnimation 16s infinite 12s;"></div>
+    </div>
+    
+    <!-- Content -->
+    <h1 style="font-size:3.5rem;margin-bottom:20px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.5);">Premium Function Halls for Unforgettable Events</h1>
+    <p style="font-size:1.5rem;max-width:800px;margin-bottom:30px;text-shadow:1px 1px 3px rgba(0,0,0,0.5);">Discover exquisite venues perfect for weddings, corporate gatherings, and special celebrations</p>
+    <a href="#contact" style="background:#e63946;color:#fff;padding:15px 30px;border-radius:50px;text-decoration:none;font-weight:600;font-size:1.2rem;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(0,0,0,0.2);" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">Enquire Now</a>
+
+    <!-- Animation Keyframes -->
+    <style>
+        @keyframes slideAnimation {
+            0% { opacity:1; }
+            20% { opacity:1; }
+            25% { opacity:0; }
+            95% { opacity:0; }
+            100% { opacity:1; }
+        }
+    </style>
+</section>
+
+    <!-- Featured Venues -->
+    <section style="padding:60px 20px;background:#f8f9fa;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;color:#333;">Our Premier Function Halls</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));gap:30px;">
+                <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img loading="lazy" src="images/grand_mall_room_function hall.png" alt="Grand Ballroom at Hitashi Plaza" style="width:100%;height:250px;object-fit:cover;">
+                    <div style="padding:25px;">
+                        <h3 style="font-size:1.8rem;margin-bottom:15px;color:#e63946;">Grand Ballroom</h3>
+                        <p style="color:#666;margin-bottom:20px;">Capacity: 500 guests | 10,000 sq.ft | Central location</p>
+                        <ul style="margin-bottom:20px;padding-left:20px;">
+                            <li style="margin-bottom:8px;">Built-in stage and dance floor</li>
+                            <li style="margin-bottom:8px;">Premium sound system</li>
+                            <li style="margin-bottom:8px;">Customizable lighting</li>
+                        </ul>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">View Details →</a>
+                    </div>
+                </div>
+                <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img loading="lazy" src="images/roof top garden_function hall.png"Rooftop Garden Venue with City Views" style="width:100%;height:250px;object-fit:cover;">
+                    <div style="padding:25px;">
+                        <h3 style="font-size:1.8rem;margin-bottom:15px;color:#e63946;">Sky Garden</h3>
+                        <p style="color:#666;margin-bottom:20px;">Capacity: 300 guests | 8,000 sq.ft | Panoramic views</p>
+                        <ul style="margin-bottom:20px;padding-left:20px;">
+                            <li style="margin-bottom:8px;">Open-air and covered options</li>
+                            <li style="margin-bottom:8px;">Landscaped gardens</li>
+                            <li style="margin-bottom:8px;">Premium catering kitchen</li>
+                        </ul>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">View Details →</a>
+                    </div>
+                </div>
+                <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img loading="lazy" src="images/executive hall.png" alt="Executive Conference Hall for Corporate Events" style="width:100%;height:250px;object-fit:cover;">
+                    <div style="padding:25px;">
+                        <h3 style="font-size:1.8rem;margin-bottom:15px;color:#e63946;">Executive Hall</h3>
+                        <p style="color:#666;margin-bottom:20px;">Capacity: 200 guests | 5,000 sq.ft | Business district</p>
+                        <ul style="margin-bottom:20px;padding-left:20px;">
+                            <li style="margin-bottom:8px;">State-of-the-art AV equipment</li>
+                            <li style="margin-bottom:8px;">Modular seating arrangements</li>
+                            <li style="margin-bottom:8px;">Dedicated event staff</li>
+                        </ul>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">View Details →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section style="padding:80px 20px;background:#fff;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:20px;color:#333;">Why Hitashi Function Halls Stand Out
+            </h2>
+            <p style="text-align:center;font-size:1.2rem;color:#666;max-width:800px;margin:0 auto 50px;">Exceptional venues with unmatched service for your special occasions</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:40px;">
+                <div style="text-align:center;">
+                    <div style="background:#e63946;width:80px;height:80px;border-radius:50%;display:flex;justify-content:center;align-items:center;margin:0 auto 20px;">
+                        <i class="fas fa-calendar-check" style="font-size:2rem;color:#fff;"></i>
+                    </div>
+                    <h3 style="font-size:1.5rem;margin-bottom:15px;">Flexible Booking</h3>
+                    <p style="color:#666;">Customizable packages with various time slots to suit your schedule</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="background:#e63946;width:80px;height:80px;border-radius:50%;display:flex;justify-content:center;align-items:center;margin:0 auto 20px;">
+                        <i class="fas fa-utensils" style="font-size:2rem;color:#fff;"></i>
+                    </div>
+                    <h3 style="font-size:1.5rem;margin-bottom:15px;">Premium Catering</h3>
+                    <p style="color:#666;">Gourmet catering options with customizable menus for all events</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="background:#e63946;width:80px;height:80px;border-radius:50%;display:flex;justify-content:center;align-items:center;margin:0 auto 20px;">
+                        <i class="fas fa-parking" style="font-size:2rem;color:#fff;"></i>
+                    </div>
+                    <h3 style="font-size:1.5rem;margin-bottom:15px;">Ample Parking</h3>
+                    <p style="color:#666;">Secure, spacious parking facilities for all your guests</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="background:#e63946;width:80px;height:80px;border-radius:50%;display:flex;justify-content:center;align-items:center;margin:0 auto 20px;">
+                        <i class="fas fa-headset" style="font-size:2rem;color:#fff;"></i>
+                    </div>
+                    <h3 style="font-size:1.5rem;margin-bottom:15px;">Dedicated Support</h3>
+                    <p style="color:#666;">Professional event coordinators to assist with all your needs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Types -->
+    <section style="padding:60px 20px;background:#f8f9fa;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;color:#333;">Perfect For All Occasions</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:20px;">
+                <div style="background:#fff;padding:30px;border-radius:10px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,0.1);transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 3px 10px rgba(0,0,0,0.1)'">
+                    <i class="fas fa-glass-cheers" style="font-size:2.5rem;color:#e63946;margin-bottom:20px;"></i>
+                    <h3 style="font-size:1.3rem;margin-bottom:15px;">Weddings</h3>
+                    <p style="color:#666;">Create magical moments on your special day</p>
+                </div>
+                <div style="background:#fff;padding:30px;border-radius:10px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,0.1);transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 3px 10px rgba(0,0,0,0.1)'">
+                    <i class="fas fa-briefcase" style="font-size:2.5rem;color:#e63946;margin-bottom:20px;"></i>
+                    <h3 style="font-size:1.3rem;margin-bottom:15px;">Corporate</h3>
+                    <p style="color:#666;">Professional settings for business events</p>
+                </div>
+                <div style="background:#fff;padding:30px;border-radius:10px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,0.1);transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 3px 10px rgba(0,0,0,0.1)'">
+                    <i class="fas fa-birthday-cake" style="font-size:2.5rem;color:#e63946;margin-bottom:20px;"></i>
+                    <h3 style="font-size:1.3rem;margin-bottom:15px;">Birthdays</h3>
+                    <p style="color:#666;">Celebrate milestones in style</p>
+                </div>
+                <div style="background:#fff;padding:30px;border-radius:10px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,0.1);transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 3px 10px rgba(0,0,0,0.1)'">
+                    <i class="fas fa-graduation-cap" style="font-size:2.5rem;color:#e63946;margin-bottom:20px;"></i>
+                    <h3 style="font-size:1.3rem;margin-bottom:15px;">Graduations</h3>
+                    <p style="color:#666;">Honor academic achievements</p>
+                </div>
+                <div style="background:#fff;padding:30px;border-radius:10px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,0.1);transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 3px 10px rgba(0,0,0,0.1)'">
+                    <i class="fas fa-music" style="font-size:2.5rem;color:#e63946;margin-bottom:20px;"></i>
+                    <h3 style="font-size:1.3rem;margin-bottom:15px;">Concerts</h3>
+                    <p style="color:#666;">Premium venues for performances</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Gallery -->
+    <section style="padding:60px 20px;background:#fff;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;color:#333;">Glimpse of Our Events
+            </h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:20px;">
+                <img loading="lazy" src="images/Elegant wedding setup.png" alt="Elegant wedding setup at Hitashi Grand Ballroom" style="width:100%;height:250px;object-fit:cover;border-radius:10px;transition:transform 0.3s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <img loading="lazy" src="images/Corporate event_function hall.png" alt="Corporate event with modern AV setup" style="width:100%;height:250px;object-fit:cover;border-radius:10px;transition:transform 0.3s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <img loading="lazy" src="images/birthday party_function hall.png" alt="Birthday party decoration example" style="width:100%;height:250px;object-fit:cover;border-radius:10px;transition:transform 0.3s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <img loading="lazy" src="images/Stage setup for musical.png" alt="Stage setup for musical performance" style="width:100%;height:250px;object-fit:cover;border-radius:10px;transition:transform 0.3s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <img loading="lazy" src="images/cattering_buffet.png" alt="Catering buffet setup example" style="width:100%;height:250px;object-fit:cover;border-radius:10px;transition:transform 0.3s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <img loading="lazy" src="images/outdoor_garden.png" alt="Outdoor garden wedding ceremony" style="width:100%;height:250px;object-fit:cover;border-radius:10px;transition:transform 0.3s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+        </div>
+    </section>
+  <!-- Capacity Chart -->
+  <section style="padding:80px 20px;background:#fff;">
+    <div style="max-width:1200px;margin:0 auto;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:2.5rem;text-align:center;margin-bottom:50px;color:#222;">Venue Capacity Guide</h2>
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;margin-bottom:40px;">
+                <thead>
+                    <tr style="background:#d4af37;color:#fff;">
+                        <th style="padding:15px;text-align:left;">Venue</th>
+                        <th style="padding:15px;text-align:center;">Banquet Style</th>
+                        <th style="padding:15px;text-align:center;">Theater Style</th>
+                        <th style="padding:15px;text-align:center;">Classroom Style</th>
+                        <th style="padding:15px;text-align:center;">Cocktail Style</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom:1px solid #eee;">
+                        <td style="padding:15px;font-weight:600;">Grand Ballroom</td>
+                        <td style="padding:15px;text-align:center;">500</td>
+                        <td style="padding:15px;text-align:center;">700</td>
+                        <td style="padding:15px;text-align:center;">350</td>
+                        <td style="padding:15px;text-align:center;">800</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #eee;">
+                        <td style="padding:15px;font-weight:600;">Garden Pavilion</td>
+                        <td style="padding:15px;text-align:center;">300</td>
+                        <td style="padding:15px;text-align:center;">400</td>
+                        <td style="padding:15px;text-align:center;">200</td>
+                        <td style="padding:15px;text-align:center;">500</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #eee;">
+                        <td style="padding:15px;font-weight:600;">Executive Center</td>
+                        <td style="padding:15px;text-align:center;">150</td>
+                        <td style="padding:15px;text-align:center;">200</td>
+                        <td style="padding:15px;text-align:center;">100</td>
+                        <td style="padding:15px;text-align:center;">250</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:15px;font-weight:600;">Platinum Hall</td>
+                        <td style="padding:15px;text-align:center;">250</td>
+                        <td style="padding:15px;text-align:center;">350</td>
+                        <td style="padding:15px;text-align:center;">180</td>
+                        <td style="padding:15px;text-align:center;">400</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="text-align:center;color:#666;max-width:800px;margin:0 auto;">Our flexible spaces can be configured to suit your event needs. All capacities are approximate and subject to current safety regulations.</p>
+    </div>
+</section>
+    <!-- Amenities -->
+<section style="padding:80px 20px;background:#f8f9fa;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;color:#333;">Premium Amenities</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:30px;">
+                <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                    <i class="fas fa-wifi" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                    <div>
+                        <h3 style="font-size:1.3rem;margin-bottom:10px;">High-Speed WiFi</h3>
+                        <p style="color:#666;">Reliable internet access for all your guests and presentations</p>
+                    </div>
+                </div>
+                <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                    <i class="fas fa-utensils" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                    <div>
+                        <h3 style="font-size:1.3rem;margin-bottom:10px;">In-House Catering</h3>
+                        <p style="color:#666;">Customizable menus with professional catering service</p>
+                    </div>
+                </div>
+                <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                    <i class="fas fa-project-diagram" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                    <div>
+                        <h3 style="font-size:1.3rem;margin-bottom:10px;">AV Equipment</h3>
+                        <p style="color:#666;">Professional audio-visual setup for presentations and entertainment</p>
+                    </div>
+                </div>
+                <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                    <i class="fas fa-parking" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                    <div>
+                        <h3 style="font-size:1.3rem;margin-bottom:10px;">Valet Parking</h3>
+                        <p style="color:#666;">Convenient parking solutions for your guests</p>
+                    </div>
+                </div>
+                <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                    <i class="fas fa-tshirt" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                    <div>
+                        <h3 style="font-size:1.3rem;margin-bottom:10px;">Dressing Rooms</h3>
+                        <p style="color:#666;">Private spaces for performers and wedding parties</p>
+                    </div>
+                </div>
+                <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                    <i class="fas fa-snowflake" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                    <div>
+                        <h3 style="font-size:1.3rem;margin-bottom:10px;">Climate Control</h3>
+                        <p style="color:#666;">Centralized AC/heating for optimal comfort</p>
+                    </div>
+                </div>
+                   <!-- New Card 1 -->
+            <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                <i class="fas fa-wheelchair" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                <div>
+                    <h3 style="font-size:1.3rem;margin-bottom:10px;">Accessibility</h3>
+                    <p style="color:#666;">ADA compliant facilities with wheelchair access</p>
+                </div>
+            </div>
+            <!-- New Card 2 -->
+            <div style="background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:flex-start;">
+                <i class="fas fa-hands-helping" style="font-size:2rem;color:#e63946;margin-right:15px;"></i>
+                <div>
+                    <h3 style="font-size:1.3rem;margin-bottom:10px;">Event Staff</h3>
+                    <p style="color:#666;">Dedicated support team for seamless event execution</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- Location -->
+    <section style="padding:80px 20px;background:#fff;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:20px;color:#333;">Prime Locations</h2>
+            <p style="text-align:center;font-size:1.2rem;color:#666;max-width:800px;margin:0 auto 50px;">Our venues are strategically located for easy access across the city</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));gap:30px;">
+                <div style="border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                    <img loading="lazy" src="images/Central Business District.png" alt="Hitashi Central Business District Location" style="width:100%;height:200px;object-fit:cover;">
+                    <div style="padding:25px;background:#fff;">
+                        <h3 style="font-size:1.5rem;margin-bottom:15px;color:#e63946;">Central Business District</h3>
+                        <p style="color:#666;margin-bottom:20px;"><i class="fas fa-map-marker-alt" style="color:#e63946;margin-right:10px;"></i> 123 Business Avenue, City Center</p>
+                        <ul style="margin-bottom:20px;padding-left:20px;">
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-subway" style="color:#e63946;margin-right:10px;"></i> 5 min from metro station</li>
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-hotel" style="color:#e63946;margin-right:10px;"></i> Nearby luxury hotels</li>
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-utensils" style="color:#e63946;margin-right:10px;"></i> 50+ restaurants in walking distance</li>
+                        </ul>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">View on Map →</a>
+                    </div>
+                </div>
+                <div style="border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                    <img loading="lazy" src="images/RIVERSIDE.png" alt="Hitashi Riverside Location" style="width:100%;height:200px;object-fit:cover;">
+                    <div style="padding:25px;background:#fff;">
+                        <h3 style="font-size:1.5rem;margin-bottom:15px;color:#e63946;">Riverside</h3>
+                        <p style="color:#666;margin-bottom:20px;"><i class="fas fa-map-marker-alt" style="color:#e63946;margin-right:10px;"></i> 456 Riverfront Road, West District</p>
+                        <ul style="margin-bottom:20px;padding-left:20px;">
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-parking" style="color:#e63946;margin-right:10px;"></i> Ample free parking</li>
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-tree" style="color:#e63946;margin-right:10px;"></i> Scenic river views</li>
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-umbrella-beach" style="color:#e63946;margin-right:10px;"></i> Nearby parks for photos</li>
+                        </ul>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">View on Map →</a>
+                    </div>
+                </div>
+                <div style="border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                    <img loading="lazy" src="images/subarban.png" alt="Hitashi Suburban Location" style="width:100%;height:200px;object-fit:cover;">
+                    <div style="padding:25px;background:#fff;">
+                        <h3 style="font-size:1.5rem;margin-bottom:15px;color:#e63946;">Suburban</h3>
+                        <p style="color:#666;margin-bottom:20px;"><i class="fas fa-map-marker-alt" style="color:#e63946;margin-right:10px;"></i> 789 Greenfield Avenue, North District</p>
+                        <ul style="margin-bottom:20px;padding-left:20px;">
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-car" style="color:#e63946;margin-right:10px;"></i> Easy highway access</li>
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-shopping-mall" style="color:#e63946;margin-right:10px;"></i> Adjacent to shopping mall</li>
+                            <li style="margin-bottom:8px;display:flex;align-items:center;"><i class="fas fa-child" style="color:#e63946;margin-right:10px;"></i> Family-friendly neighborhood</li>
+                        </ul>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">View on Map →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- Availability Checker -->
+        <section id="availability" style="padding:80px 20px;background:linear-gradient(rgba(34,34,34,0.9),rgba(34,34,34,0.9)),url('availability-bg.jpg') center/cover no-repeat;color:#fff;">
+            <div style="max-width:800px;margin:0 auto;text-align:center;">
+                <h2 style="font-family:'Playfair Display',serif;font-size:2.5rem;margin-bottom:20px;">Check Date Availability</h2>
+                <p style="margin-bottom:40px;font-size:1.1rem;">Enter your preferred date to see which of our stunning venues are available for your special event.</p>
+                <form style="display:grid;grid-template-columns:1fr auto;gap:15px;max-width:600px;margin:0 auto;">
+                    <input type="date" style="padding:15px;border-radius:5px;border:none;font-family:inherit;min-width:200px;" min="<?php echo date('Y-m-d'); ?>" required>
+                    <button type="submit" style="background:#d4af37;color:#fff;padding:15px 30px;border:none;border-radius:5px;font-weight:600;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.backgroundColor='#c19b2e'" onmouseout="this.style.backgroundColor='#d4af37'">Check Now</button>
+                </form>
+                <p style="margin-top:30px;font-size:0.9rem;color:rgba(255,255,255,0.8);">For last-minute bookings or specific requirements, please call our events team at (555) 123-4567</p>
+            </div>
+    </section>
+    <!-- Pricing -->
+    <section style="padding:80px 20px;background:#fff;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:20px;color:#333;">Transparent Pricing</h2>
+            <p style="text-align:center;font-size:1.2rem;color:#666;max-width:800px;margin:0 auto 50px;">Competitive rates with flexible packages to suit your budget</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));gap:30px;">
+                <div style="background:#f8f9fa;border-radius:10px;overflow:hidden;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)';this.style.boxShadow='0 10px 20px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                    <div style="background:#e63946;padding:20px;text-align:center;color:#fff;">
+                        <h3 style="font-size:1.8rem;margin-bottom:10px;">Weekday Package</h3>
+                        <p style="font-size:1.2rem;">Monday - Thursday</p>
+                    </div>
+                    <div style="padding:30px;">
+                        <div style="font-size:2.5rem;font-weight:700;text-align:center;margin-bottom:30px;color:#333;">₹25,000<span style="font-size:1rem;color:#666;"> /day</span></div>
+                        <ul style="margin-bottom:30px;padding-left:20px;">
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>8-hour booking</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Basic sound system</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Standard lighting</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>50 chairs & 10 tables</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Parking for 20 cars</li>
+                        </ul>
+                        <a href="#contact" style="display:block;text-align:center;background:#e63946;color:#fff;padding:12px;border-radius:5px;text-decoration:none;font-weight:600;transition:background 0.3s ease;" onmouseover="this.style.background='#c1121f'" onmouseout="this.style.background='#e63946'">Book Now</a>
+                    </div>
+                </div>
+                <div style="background:#f8f9fa;border-radius:10px;overflow:hidden;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)';this.style.boxShadow='0 10px 20px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                    <div style="background:#e63946;padding:20px;text-align:center;color:#fff;">
+                        <h3 style="font-size:1.8rem;margin-bottom:10px;">Weekend Package</h3>
+                        <p style="font-size:1.2rem;">Friday - Sunday</p>
+                    </div>
+                    <div style="padding:30px;">
+                        <div style="font-size:2.5rem;font-weight:700;text-align:center;margin-bottom:30px;color:#333;">₹40,000<span style="font-size:1rem;color:#666;"> /day</span></div>
+                        <ul style="margin-bottom:30px;padding-left:20px;">
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>10-hour booking</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Premium sound system</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Customizable lighting</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>100 chairs & 20 tables</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Parking for 40 cars</li>
+                        </ul>
+                        <a href="#contact" style="display:block;text-align:center;background:#e63946;color:#fff;padding:12px;border-radius:5px;text-decoration:none;font-weight:600;transition:background 0.3s ease;" onmouseover="this.style.background='#c1121f'" onmouseout="this.style.background='#e63946'">Book Now</a>
+                    </div>
+                </div>
+                <div style="background:#f8f9fa;border-radius:10px;overflow:hidden;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)';this.style.boxShadow='0 10px 20px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                    <div style="background:#e63946;padding:20px;text-align:center;color:#fff;">
+                        <h3 style="font-size:1.8rem;margin-bottom:10px;">Premium Package</h3>
+                        <p style="font-size:1.2rem;">Any Day</p>
+                    </div>
+                    <div style="padding:30px;">
+                        <div style="font-size:2.5rem;font-weight:700;text-align:center;margin-bottom:30px;color:#333;">₹75,000<span style="font-size:1rem;color:#666;"> /day</span></div>
+                        <ul style="margin-bottom:30px;padding-left:20px;">
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>12-hour booking</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Professional AV system</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Advanced lighting control</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>200 chairs & 30 tables</li>
+                            <li style="margin-bottom:15px;display:flex;align-items:center;"><i class="fas fa-check" style="color:#e63946;margin-right:10px;"></i>Valet parking service</li>
+                        </ul>
+                        <a href="#contact" style="display:block;text-align:center;background:#e63946;color:#fff;padding:12px;border-radius:5px;text-decoration:none;font-weight:600;transition:background 0.3s ease;" onmouseover="this.style.background='#c1121f'" onmouseout="this.style.background='#e63946'">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Preview -->
+    <section style="padding:80px 20px;background:#fff;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:20px;color:#333;">Event Planning Tips</h2>
+            <p style="text-align:center;font-size:1.2rem;color:#666;max-width:800px;margin:0 auto 50px;">Expert advice to make your event truly memorable</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));gap:30px;">
+                <div style="border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img loading="lazy" src="images/wedding planning.png" alt="Wedding Planning Guide" style="width:100%;height:200px;object-fit:cover;">
+                    <div style="padding:25px;background:#fff;">
+                        <div style="color:#e63946;font-weight:600;margin-bottom:15px;">WEDDINGS</div>
+                        <h3 style="font-size:1.5rem;margin-bottom:15px;">10 Essential Tips for Stress-Free Wedding Planning</h3>
+                        <p style="color:#666;margin-bottom:20px;">Discover how to organize your dream wedding without the overwhelm with our expert checklist...</p>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">Read More →</a>
+                    </div>
+                </div>
+                <div style="border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img loading="lazy" src="images/corporate event planning.png" alt="Corporate Event Planning" style="width:100%;height:200px;object-fit:cover;">
+                    <div style="padding:25px;background:#fff;">
+                        <div style="color:#e63946;font-weight:600;margin-bottom:15px;">CORPORATE</div>
+                        <h3 style="font-size:1.5rem;margin-bottom:15px;">Maximizing ROI on Your Corporate Events</h3>
+                        <p style="color:#666;margin-bottom:20px;">Learn professional strategies to ensure your business events deliver measurable results...</p>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">Read More →</a>
+                    </div>
+                </div>
+                <div style="border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img loading="lazy" src="images/budjet_planning.png" alt="Budget Event Planning" style="width:100%;height:200px;object-fit:cover;">
+                    <div style="padding:25px;background:#fff;">
+                        <div style="color:#e63946;font-weight:600;margin-bottom:15px;">BUDGET TIPS</div>
+                        <h3 style="font-size:1.5rem;margin-bottom:15px;">Luxury Look on a Budget: Event Styling Secrets</h3>
+                        <p style="color:#666;margin-bottom:20px;">Professional event planners share their tricks for creating high-end looks without the premium price tag...</p>
+                        <a href="#" style="color:#e63946;font-weight:600;text-decoration:none;">Read More →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FAQ -->
+    <section style="padding:80px 20px;background:#f8f9fa;">
+        <div style="max-width:800px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;color:#333;">Frequently Asked Questions</h2>
+            <div style="margin-bottom:30px;">
+                <div style="background:#fff;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);margin-bottom:15px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+                    <h3 style="font-size:1.3rem;display:flex;justify-content:space-between;align-items:center;">What is the booking process? <i class="fas fa-plus" style="color:#e63946;"></i></h3>
+                </div>
+                <div style="background:#fff;padding:0 20px 20px;border-radius:0 0 10px 10px;display:none;">
+                    <p style="color:#666;">Our booking process is simple: 1) Check availability for your preferred date 2) Schedule a venue tour 3) Sign the contract and pay the deposit (typically 30% of total) 4) Finalize event details with our coordinator 5) Pay remaining balance one week before event.</p>
+                </div>
+            </div>
+            <div style="margin-bottom:30px;">
+                <div style="background:#fff;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);margin-bottom:15px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+                    <h3 style="font-size:1.3rem;display:flex;justify-content:space-between;align-items:center;">Can we bring our own vendors? <i class="fas fa-plus" style="color:#e63946;"></i></h3>
+                </div>
+                <div style="background:#fff;padding:0 20px 20px;border-radius:0 0 10px 10px;display:none;">
+                    <p style="color:#666;">Yes, you're welcome to bring your own vendors (caterers, decorators, etc.), though we do have preferred vendors who know our venues well. Outside vendors must provide proof of insurance and may need to sign our vendor agreement. Some venues have kitchen access fees for outside caterers.</p>
+                </div>
+            </div>
+            <div style="margin-bottom:30px;">
+                <div style="background:#fff;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);margin-bottom:15px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+                    <h3 style="font-size:1.3rem;display:flex;justify-content:space-between;align-items:center;">What is your cancellation policy? <i class="fas fa-plus" style="color:#e63946;"></i></h3>
+                </div>
+                <div style="background:#fff;padding:0 20px 20px;border-radius:0 0 10px 10px;display:none;">
+                    <p style="color:#666;">Cancellations made more than 90 days before the event receive a full refund. 60-90 days prior: 50% refund. 30-60 days: 25% refund. Less than 30 days: no refund, though we may offer credit towards future bookings depending on circumstances. We recommend event insurance for high-value events.</p>
+                </div>
+            </div>
+            <div style="margin-bottom:30px;">
+                <div style="background:#fff;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);margin-bottom:15px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+                    <h3 style="font-size:1.3rem;display:flex;justify-content:space-between;align-items:center;">Do you provide decorations? <i class="fas fa-plus" style="color:#e63946;"></i></h3>
+                </div>
+                <div style="background:#fff;padding:0 20px 20px;border-radius:0 0 10px 10px;display:none;">
+                    <p style="color:#666;">Our venues come with basic decor (table linens, chair covers, simple centerpieces). We offer upgraded decoration packages through our preferred vendors, or you're welcome to bring/hire your own decorators. We can provide recommendations based on your theme and budget.</p>
+                </div>
+            </div>
+            <div style="margin-bottom:30px;">
+                <div style="background:#fff;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);margin-bottom:15px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+                    <h3 style="font-size:1.3rem;display:flex;justify-content:space-between;align-items:center;">Is there a noise restriction? <i class="fas fa-plus" style="color:#e63946;"></i></h3>
+                </div>
+                <div style="background:#fff;padding:0 20px 20px;border-radius:0 0 10px 10px;display:none;">
+                    <p style="color:#666;">Our venues follow local noise ordinances. Typically, outdoor music must conclude by 11 PM on weekdays and midnight on weekends. Indoor venues have later cutoffs (1 AM) with proper soundproofing. We'll advise specific restrictions when you book based on your venue location.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Testimonials -->
+    <section style="padding:80px 20px;background:#f8f9fa;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;color:#333;">What Our Clients Say</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));gap:30px;">
+                <div style="background:#fff;padding:30px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.1);position:relative;">
+                    <div style="display:flex;align-items:center;margin-bottom:20px;">
+                        <img loading="lazy" src="images/priya_sharma.png" alt="Priya Sharma" style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin-right:15px;">
+                        <div>
+                            <h3 style="font-size:1.3rem;margin-bottom:5px;">Priya Sharma</h3>
+                            <div style="color:#e63946;">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#666;font-style:italic;">"The Grand Ballroom was perfect for our wedding. The Hitashi team handled everything flawlessly, from decorations to catering. Our guests are still talking about how beautiful everything was!"</p>
+                </div>
+                <div style="background:#fff;padding:30px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.1);position:relative;">
+                    <div style="display:flex;align-items:center;margin-bottom:20px;">
+                        <img loading="lazy" src="images/rajeev_mehta.png" alt="Rajiv Mehta" style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin-right:15px;">
+                        <div>
+                            <h3 style="font-size:1.3rem;margin-bottom:5px;">Rajiv Mehta</h3>
+                            <div style="color:#e63946;">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#666;font-style:italic;">"We hosted our annual conference at the Executive Hall and couldn't be happier. The AV equipment was top-notch, and the staff anticipated all our needs. Will definitely book again!"</p>
+                </div>
+                <div style="background:#fff;padding:30px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.1);position:relative;">
+                    <div style="display:flex;align-items:center;margin-bottom:20px;">
+                        <img loading="lazy" src="images/annanya patel.png" alt="Ananya Patel" style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin-right:15px;">
+                        <div>
+                            <h3 style="font-size:1.3rem;margin-bottom:5px;">Ananya Patel</h3>
+                            <div style="color:#e63946;">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#666;font-style:italic;">"The Sky Garden venue made my daughter's birthday magical. The sunset views were breathtaking, and the catering was delicious. Worth every penny for such special memories."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Stats -->
+    <section style="padding:80px 20px;background:linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)),url('stats-bg.jpg') center/cover no-repeat;color:#fff;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;">Hitashi Function Halls By The Numbers</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:30px;text-align:center;">
+                <div>
+                    <div style="font-size:3.5rem;font-weight:700;margin-bottom:10px;color:#e63946;">150+</div>
+                    <p style="font-size:1.2rem;">Events Hosted Monthly</p>
+                </div>
+                <div>
+                    <div style="font-size:3.5rem;font-weight:700;margin-bottom:10px;color:#e63946;">25</div>
+                    <p style="font-size:1.2rem;">Premium Venues</p>
+                </div>
+                <div>
+                    <div style="font-size:3.5rem;font-weight:700;margin-bottom:10px;color:#e63946;">98%</div>
+                    <p style="font-size:1.2rem;">Client Satisfaction</p>
+                </div>
+                <div>
+                    <div style="font-size:3.5rem;font-weight:700;margin-bottom:10px;color:#e63946;">10K+</div>
+                    <p style="font-size:1.2rem;">Happy Guests</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Partners -->
+    <section style="padding:60px 20px;background:#f8f9fa;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:50px;color:#333;">Trusted By</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:40px;align-items:center;">
+                <img loading="lazy" src="images/taj hotel.png" alt="Taj Hotels" style="width:100%;height:auto;filter:grayscale(100%);opacity:0.7;transition:all 0.3s ease;" onmouseover="this.style.filter='grayscale(0)';this.style.opacity='1'" onmouseout="this.style.filter='grayscale(100%)';this.style.opacity='0.7'">
+                <img loading="lazy" src="images/microsoft.png" alt="Microsoft" style="width:100%;height:auto;filter:grayscale(100%);opacity:0.7;transition:all 0.3s ease;" onmouseover="this.style.filter='grayscale(0)';this.style.opacity='1'" onmouseout="this.style.filter='grayscale(100%)';this.style.opacity='0.7'">
+                <img loading="lazy" src="images/pepsi.png" alt="Pepsi" style="width:100%;height:auto;filter:grayscale(100%);opacity:0.7;transition:all 0.3s ease;" onmouseover="this.style.filter='grayscale(0)';this.style.opacity='1'" onmouseout="this.style.filter='grayscale(100%)';this.style.opacity='0.7'">
+                <img loading="lazy" src="images/sony.png" alt="Sony" style="width:100%;height:auto;filter:grayscale(100%);opacity:0.7;transition:all 0.3s ease;" onmouseover="this.style.filter='grayscale(0)';this.style.opacity='1'" onmouseout="this.style.filter='grayscale(100%)';this.style.opacity='0.7'">
+                <img loading="lazy" src="images/hyundai.png" alt="Hyundai" style="width:100%;height:auto;filter:grayscale(100%);opacity:0.7;transition:all 0.3s ease;" onmouseover="this.style.filter='grayscale(0)';this.style.opacity='1'" onmouseout="this.style.filter='grayscale(100%)';this.style.opacity='0.7'">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact" style="padding:80px 20px;background:#fff;">
+        <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit, minmax(400px, 1fr));gap:50px;align-items:center;">
+            <div>
+                <h2 style="font-size:2.8rem;margin-bottom:20px;color:#333;">Get In Touch</h2>
+                <p style="font-size:1.2rem;color:#666;margin-bottom:30px;">Have questions about our venues or availability? Fill out the form and our team will respond within 24 hours.</p>
+                <div style="margin-bottom:30px;">
+                    <div style="display:flex;align-items:center;margin-bottom:15px;">
+                        <i class="fas fa-map-marker-alt" style="font-size:1.5rem;color:#e63946;margin-right:15px;"></i>
+                        <p style="color:#666;">123 Event Avenue, Mumbai 400001, India</p>
+                    </div>
+                    <div style="display:flex;align-items:center;margin-bottom:15px;">
+                        <i class="fas fa-phone" style="font-size:1.5rem;color:#e63946;margin-right:15px;"></i>
+                        <p style="color:#666;">+91 98765 43210</p>
+                    </div>
+                    <div style="display:flex;align-items:center;">
+                        <i class="fas fa-envelope" style="font-size:1.5rem;color:#e63946;margin-right:15px;"></i>
+                        <p style="color:#666;">events@hitashirealestate.com</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:15px;">
+                    <a href="#" style="background:#3b5998;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;justify-content:center;align-items:center;text-decoration:none;"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" style="background:#1da1f2;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;justify-content:center;align-items:center;text-decoration:none;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="background:#e1306c;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;justify-content:center;align-items:center;text-decoration:none;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="background:#0077b5;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;justify-content:center;align-items:center;text-decoration:none;"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <form style="background:#f8f9fa;padding:40px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05);">
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;color:#333;">Your Name*</label>
+                    <input type="text" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:1rem;" required>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;color:#333;">Email Address*</label>
+                    <input type="email" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:1rem;" required>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;color:#333;">Phone Number*</label>
+                    <input type="tel" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:1rem;" required>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;color:#333;">Event Type*</label>
+                    <select style="width:100%;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:1rem;" required>
+                        <option value="">Select Event Type</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="corporate">Corporate Event</option>
+                        <option value="birthday">Birthday Party</option>
+                        <option value="conference">Conference</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;color:#333;">Estimated Guests*</label>
+                    <input type="number" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:1rem;" required>
+                </div>
+                <div style="margin-bottom:25px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;color:#333;">Message</label>
+                    <textarea style="width:100%;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:1rem;min-height:120px;"></textarea>
+                </div>
+                <button type="submit" style="background:#e63946;color:#fff;padding:15px 30px;border:none;border-radius:50px;font-weight:600;font-size:1.1rem;cursor:pointer;transition:all 0.3s ease;width:100%;" onmouseover="this.style.background='#c1121f'" onmouseout="this.style.background='#e63946'">Submit Enquiry</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Google Maps -->
+    <section style="height:500px;">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.715425747185!2d72.82821431490036!3d19.05232345789944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c8df405df9e5%3A0x3b0e97b3e6e3f0e5!2sHitashi%20Real%20Estate!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </section>
+
+
+
+    <footer style="background-color:#2b2d42;color:#fff;padding:60px 20px 30px;font-family:'Poppins',sans-serif;">
+        <div style="max-width: auto;">
+            <!-- Main Footer Row - Now using CSS Grid for equal height columns -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:40px;margin-bottom:40px;align-items:start;">
+                <!-- Left Side - Hitashi Homes Text -->
+                <div style="display:flex;flex-direction:column;height:100%;">
+                    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Hitashi RealEstate</h2>
+                    <p style="color:#ccc;line-height:1.6;margin-bottom:20px;flex-grow:1;">Your premier destination for all real estate needs. From residential to commercial, we have the perfect property for you. Whether you're looking for luxury villas, budget apartments, or profitable commercial investments, our expert team is here to guide you through every step of your real estate journey. Experience hassle-free transactions, verified listings, and personalized service tailored just for you.</p>
+                </div>
+      
+                <!-- Middle Section - Property Columns (50% width) -->
+                <div style="flex:2; min-width:500px; display:flex; gap:40px; justify-content:space-between;">
+                    <!-- Residential Column -->
+                    <div style="flex:1;">
+                        <h3 style="font-size:1.2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Residential</h3>
+                        <ul style="list-style-type:none;padding:0;margin:0;">
+                            <li style="margin-bottom:12px;"><a href="highriseapartments.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">HighRise Apartments</a></li>
+                            <li style="margin-bottom:12px;"><a href="villa.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Villas</a></li>
+                            <li style="margin-bottom:12px;"><a href="farmhouse.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Farm Houses</a></li>
+                            <li style="margin-bottom:12px;"><a href="builders.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">RealEstate Builders</a></li>
+                            <li style="margin-bottom:12px;"><a href="lands.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Land Development Sites</a></li>
+                            <li style="margin-bottom:12px;"><a href="Buy.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Buy</a></li>
+                            <li><a href="#" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Rent</a></li>
+                        </ul>
+                    </div>
+      
+                    <!-- Commercial Column -->
+                    <div style="flex:1;">
+                        <h3 style="font-size:1.2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Commercial</h3>
+                        <ul style="list-style-type:none;padding:0;margin:0;">
+                            <li style="margin-bottom:12px;"><a href="office.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Offices</a></li>
+                            <li style="margin-bottom:12px;"><a href="retails.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Retails</a></li>
+                            <li style="margin-bottom:12px;"><a href="malls.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Malls</a></li>
+                            <li style="margin-bottom:12px;"><a href="functionhalls.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Function Halls</a></li>
+                            <li style="margin-bottom:12px;"><a href="hospitals" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Hospitals</a></li>
+                            <li style="margin-bottom:12px;"><a href="postRent.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Post for Rent</a></li>
+                            <li><a href="lands.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Agriculture Lands</a></li>
+                        </ul>
+                    </div>
+      
+                    <!-- Company Column -->
+                    <div style="flex:1;">
+                        <h3 style="font-size:1.2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Company</h3>
+                        <ul style="list-style-type:none;padding:0;margin:0;">
+                            <li style="margin-bottom:12px;"><a href="index.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">HomePage</a></li>
+                            <li style="margin-bottom:12px;"><a href="about.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">About Us</a></li>
+                            <li style="margin-bottom:12px;"><a href="Login.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Login</a></li>
+                            <li style="margin-bottom:12px;"><a href="Register.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Register</a></li>
+                            <li style="margin-bottom:12px;"><a href="contact.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Contact</a></li>
+                            <li style="margin-bottom:12px;"><a href="Sell.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Postproperty</a></li>
+                            <li><a href="about.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+      
+                <!-- Right Side - Contact Info with Social Icons (25% width) -->
+                <div style="flex:1; min-width:250px; max-width:300px; margin-left:30%;">
+                    <div style="display:flex;align-items:center;margin-bottom:20px;">
+                        <img loading="lazy" src="images/home icon.png" alt="Hitashi RealEstate Logo" style="width:50px;height:50px;margin-right:15px;">
+                        <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:#e63946;">Hitashi RealEstate</h2>
+                    </div>
+                    <div style="margin-bottom:25px;">
+                        <p style="color:#ccc;margin-bottom:10px;"><i class="fas fa-map-marker-alt" style="color:#e63946;margin-right:8px;"></i> 985,Pragathi Nagar,<br>Kukatpally,Hyderabad,500090</p>
+                        <p style="color:#ccc;margin-bottom:10px;"><i class="fas fa-phone" style="color:#e63946;margin-right:8px;"></i> 8790170525</p>
+                        <p style="color:#ccc;"><i class="fas fa-envelope" style="color:#e63946;margin-right:8px;"></i> contact@hitashirealestate.com</p>
+                    </div>
+                    <!-- Social Media Icons -->
+                    <h3 style="font-size:1.1rem;margin-bottom:15px;color:#e63946;">Follow Us</h3>
+                    <div style="display:flex;gap:15px;justify-content:flex-start;">
+                        <a href="https://www.facebook.com/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/733/733547.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                        <a href="https://x.com/?lang=en-in" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/733/733579.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                        <a href="https://www.instagram.com/accounts/login/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/733/733558.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                        <a href="https://www.linkedin.com/feed/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/174/174857.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                        <a href="https://www.youtube.com/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/1384/1384060.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                    </div>
+                </div>
+            </div>
+      
+            <!-- Bottom Line -->
+            <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:30px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;">
+            <p style="color:#ccc;margin:0;">&copy; 2025 Hitashi RealEstate. All rights reserved.</p>
+            <div style="display:flex;gap:20px;">
+                <a href="#" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Privacy Policy</a>
+                <a href="#" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Terms of Service</a>
+            </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

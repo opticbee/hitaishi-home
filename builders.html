@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitaishi Homes - Navbar</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ </head>
+ 
+<body> 
+
+  
+     <!-- Top Navigation -->
+     <nav style="background-color: #a621db; color: white; padding: 15px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; max-width: 1200px; margin: auto;">
+        <a href="index.html" style="color: white; font-size: 24px; text-decoration: none;">
+          <i class="fas fa-house"></i> Hitaishi Homes
+        </a>
+
+        <!-- <div style="display: flex; align-items: center; gap: 10px;">
+          <input type="search" placeholder="Search property..." style="padding: 8px; border: none; border-radius: 5px 0 0 5px;">
+          <button style="padding: 8px 12px; background: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer;">
+            <i class="fa fa-search" style="color: rgb(243, 151, 114);"></i>
+          </button>
+        </div> -->
+
+
+        <!-- search -->
+        <div style="display: flex; align-items: center; gap: 10px; position: relative; min-width: 200px; max-width: 500px;">
+            <input type="search" id="searchInput" placeholder="Search property..." 
+                   style="padding: 8px; border: none; border-radius: 5px 0 0 5px; width: 160px;">
+            <button id="searchButton" 
+                    style="padding: 8px 12px; background: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer;">
+              <i class="fa fa-search" style="color: rgb(243, 151, 114);"></i>
+            </button>
+            <!-- <div id="suggestions" 
+                 style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; color: black; z-index: 1000; max-height: 250px;  box-shadow: 0 4px 8px rgba(0,0,0,0.1); box-sizing: border-box; border-radius: 0 0 5px 5px;">
+            </div> -->
+          </div>
+          
+        
+        <script>
+            // Comprehensive search index with proper URLs
+            const searchIndex = [
+                // Property Types
+                { keyword: 'house', url: 'Buy.html?type=house' },
+                { keyword: 'apartment', url: 'highriseapartments.html' },
+                { keyword: 'villa', url: 'villas.html' },
+                { keyword: 'plot', url: 'lands.html' },
+                { keyword: 'commercial', url: 'commercial.html' },
+                { keyword: 'farmhouse', url: 'farmhouse.html' },
+                { keyword: 'shop', url: 'commercial.html?type=shop' },
+                { keyword: 'land', url: 'lands.html' },
+                { keyword: 'flat', url: 'Buy.html?type=flat' },
+                { keyword: 'penthouse', url: 'Buy.html?type=penthouse' },
+                { keyword: 'duplex', url: 'Buy.html?type=duplex' },
+            
+                // Cities
+                { keyword: 'mumbai', url: 'Buy.html?city=mumbai' },
+                { keyword: 'delhi', url: 'Buy.html?city=delhi' },
+                { keyword: 'bangalore', url: 'Buy.html?city=bangalore' },
+                { keyword: 'chennai', url: 'Buy.html?city=chennai' },
+                { keyword: 'hyderabad', url: 'Buy.html?city=hyderabad' },
+                { keyword: 'pune', url: 'Buy.html?city=pune' },
+                { keyword: 'kolkata', url: 'Buy.html?city=kolkata' },
+            
+                // Features
+                { keyword: 'furnished', url: 'Buy.html?feature=furnished' },
+                { keyword: 'ready to move', url: 'Buy.html?feature=ready' },
+                { keyword: 'luxury', url: 'villas.html' },
+            
+                // Services
+                { keyword: 'buy', url: 'Buy.html' },
+                { keyword: 'sell', url: 'Sell.html' },
+                { keyword: 'rent', url: 'Rent.html' },
+                { keyword: 'loan', url: 'services.html#loan' },
+                { keyword: 'legal', url: 'services.html#legal' },
+            
+                // Pages
+                { keyword: 'about', url: 'about.html' },
+                { keyword: 'contact', url: 'contact.html' },
+                { keyword: 'login', url: 'login.html' },
+                { keyword: 'register', url: 'register.html' }
+            ];
+            
+            // Search function
+            function performSearch(query) {
+                query = query.toLowerCase().trim();
+                if (!query) return [];
+            
+                const terms = query.split(' ');
+                const matches = searchIndex.filter(item => {
+                    const itemKeywords = item.keyword.toLowerCase().split(' ');
+                    return terms.some(term =>
+                        itemKeywords.some(kw => kw.includes(term))
+                    );
+                });
+            
+                matches.sort((a, b) => {
+                    const aExact = a.keyword.toLowerCase() === query;
+                    const bExact = b.keyword.toLowerCase() === query;
+                    return bExact - aExact || b.keyword.length - a.keyword.length;
+                });
+            
+                return matches;
+            }
+            
+            // Handle search action
+            function handleSearch() {
+                const query = document.getElementById('searchInput').value;
+                const matches = performSearch(query);
+            
+                if (matches.length > 0) {
+                    window.location.href = matches[0].url;
+                } else {
+                    window.location.href = `Buy.html?search=${encodeURIComponent(query)}`;
+                }
+            }
+            
+            // Show autocomplete suggestions
+            function showSuggestions(query) {
+                const suggestions = performSearch(query);
+                const container = document.getElementById('suggestions');
+                container.innerHTML = '';
+            
+                if (suggestions.length === 0) {
+                    container.style.display = 'none';
+                    return;
+                }
+            
+                suggestions.slice(0, 5).forEach(item => {
+                    const div = document.createElement('div');
+                    div.textContent = item.keyword;
+                    div.style.padding = '8px 16px';
+                    div.style.cursor = 'pointer';
+                    div.style.borderBottom = '1px solid #eee';
+                    div.style.background = 'white';
+                    div.onclick = () => window.location.href = item.url;
+                    div.onmouseover = () => div.style.background = '#f5f5f5';
+                    div.onmouseout = () => div.style.background = 'white';
+                    container.appendChild(div);
+                });
+            
+                container.style.display = 'block';
+            }
+            
+            // Event listeners
+            document.getElementById('searchButton').addEventListener('click', handleSearch);
+            document.getElementById('searchInput').addEventListener('input', function () {
+                showSuggestions(this.value);
+            });
+            document.getElementById('searchInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') handleSearch();
+            });
+            
+            // Hide suggestions on click outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('#searchInput') && !e.target.closest('#suggestions')) {
+                    document.getElementById('suggestions').style.display = 'none';
+                }
+            });
+            
+            // Prevent body scroll when input is focused (optional)
+            document.getElementById('searchInput').addEventListener('focus', () => {
+                document.body.style.overflow = 'hidden';
+            });
+            document.getElementById('searchInput').addEventListener('blur', () => {
+                setTimeout(() => { // delay to allow click on suggestion
+                    document.body.style.overflow = '';
+                }, 200);
+            });
+        </script>
+
+
+
+
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <a href="builders.html" style="color: black; text-decoration: none; font-size: 16px;">Real Estate Builders</a>
+          <a href="highriseapartments.html" style="color: black; text-decoration: none; font-size: 16px;">High Rise Apartments</a>
+          <a href="Sell.html" style="color: black; text-decoration: none; font-size: 16px;">
+            Post Property <i class="fas fa-paper-plane"></i>
+          </a>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <a href="#" title="Facebook" style="color: white; font-size: 28px;"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" title="Twitter" style="color: white; font-size: 28px;"><i class="fab fa-twitter"></i></a>
+          <a href="#" title="Instagram" style="color: white; font-size: 28px;"><i class="fab fa-instagram"></i></a>
+          <a href="#" title="LinkedIn" style="color: white; font-size: 28px;"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" title="YouTube" style="color: white; font-size: 28px;"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </nav>
+
+<!-- Bottom Navigation -->
+<nav style="background-color: #ebefa0; position: sticky; top: 0; z-index: 1000;">
+  <div style="max-width: 1200px; margin: auto; padding: 10px 15px;">
+    <ul style="display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; justify-content: center; gap: 15px;">
+      <li style="position: relative;">
+        <a href="index.html" style="text-decoration: none; color: #000; padding: 10px; display: block;">Home</a>
+      </li>
+
+      <li style="position: relative;">
+        <a href="Buy.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Buy <i class="fas fa-angle-down"></i></a>
+        <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+          <li><a href="Buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+          <li><a href="buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Plots</a></li>
+          <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+          <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+          <li><a href="buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Shops</a></li>
+          <li><a href="find_agent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Ready to move</a></li>
+          <li><a href="buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+          <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Commercial</a></li>
+          <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Agriculture Lands</a></li>
+          <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+        </ul>
+      </li>
+
+      <li style="position: relative;">
+        <a href="Sell.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Sell <i class="fas fa-angle-down"></i></a>
+        <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+          <li><a href="postRent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Post Property</a></li>
+          <li><a href="postRent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Dashboard</a></li>
+          <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+          <li><a href="Sell.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+          <li><a href="Sell.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Plots</a></li>
+          <li><a href="Sell.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+          <li><a href="find_agent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Ready to move</a></li>
+          <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Commercial</a></li>
+          <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Farm Houses</a></li>
+          <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+        </ul>
+      </li>
+
+      <li style="position: relative;">
+        <a href="Rent.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Rent <i class="fas fa-angle-down"></i></a>
+        <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+          <li><a href="Rent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+          <li><a href="highriseapartments.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+          <li><a href="Rent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+          <li><a href="Rent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+          <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Farm Houses</a></li>
+          <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+          <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Commercial</a></li>
+        </ul>
+      </li>
+
+      
+
+        <li style="position: relative;">
+                <a href="villas.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Villas<i class="fas fa-angle-down"></i></a>
+                <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+                    <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+                    <li><a href="villas.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Villas</a></li>
+                    <li><a href="lands.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Plots</a></li>
+                    <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Flats</a></li>
+                    <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Shop</a></li>
+                    <li><a href="find_agent.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Ready to move</a></li>
+                    <li><a href="Buy.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Furnished</a></li>
+                </ul>
+        </li>
+
+
+        <li style="position: relative;">
+                <a href="commercial.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Commercial<i class="fas fa-angle-down"></i></a>
+                <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+                    <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Houses</a></li>
+                    <li><a href="malls.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Malls</a></li>
+                    <li><a href="hospital.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Hospitals</a></li>
+                    <li><a href="office.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Offices</a></li>
+                    <li><a href="retails.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Retails</a></li>
+                    <li><a href="functionhall.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Function Halls</a></li>
+                    <li><a href="landdevelopment.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Land Developments</a></li>
+                </ul>
+        </li>
+            
+        <li style="position: relative;">
+                <a href="farmhouse.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Farm Houses<i class="fas fa-angle-down"></i></a>
+                <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+                    <li><a href="farmhouse.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Farm Houses</a></li>
+                    <li><a href="commercial.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Layouts</a></li>
+               </ul>
+        </li>
+
+        <li style="position: relative;">
+          <a href="lands.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Agriculture Lands</a>
+        </li>
+
+        <li style="position: relative;">
+          <a href="about.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">About Us</a>
+        </li>
+
+        <li style="position: relative;">
+            <a href="contact.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Contact Us</a>
+        </li>
+
+        <li style="position: relative;">
+          <a href="login.html" style="text-decoration: none; color: #000; padding: 10px; display:block;">Login</a>
+          <ul style="position: absolute; background-color: #fff; list-style: none; padding: 10px 0; margin: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 180px; top: 100%; left: 0;">
+            <li><a href="Login.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Login</a></li>
+            <li><a href="register.html" style="text-decoration: none; color: #333; display: block; padding: 8px 20px;">Register</a></li>
+          </ul>
+        </li>
+
+    </ul>
+  </div>
+</nav>
+<script>
+    document.querySelectorAll('nav ul li').forEach(li => {
+      li.addEventListener('mouseenter', () => {
+        const submenu = li.querySelector('ul');
+        if (submenu) submenu.style.display = 'block';
+      });
+      li.addEventListener('mouseleave', () => {
+        const submenu = li.querySelector('ul');
+        if (submenu) submenu.style.display = 'none';
+      });
+    });
+</script>
+
+
+<section style="display: flex; justify-content: center; padding: 20px;">
+  <div style="display: flex; flex-wrap: wrap; gap: 0; width: 1460px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); background-color: white;">
+    <div style="flex: 1 1 550px;">
+      <img src="https://www.hmda.gov.in/wp-content/uploads/2020/07/HMDA1Logo1.jpg" 
+           style="width: 100%; height: 400px; object-fit: cover;">
+    </div>
+    <div style="flex: 1 1 910px;">
+      <img src="https://img.thecontentserver.com/ac5adbe3-76ec-48ea-b0e4-5dc8744c420c/1_th.jpg" 
+           style="width: 100%; height: 400px; object-fit: cover;">
+    </div>
+
+  </div>
+</section>
+<section style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 40px;">
+  <div style="flex: 1; min-width: 300px; padding-right: 20px;">
+    <h1 style="font-size: 32px; margin-bottom: 20px;">Welcome to REALESTATE SERVICES</h1>
+    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 20px;">
+      Real estate builders play a vital role in shaping the urban landscape and providing people with places to live, work, and thrive. From designing residential homes and apartments to constructing commercial complexes and townships, builders are at the heart of the real estate industry.
+    </p>
+    <p style="font-size: 18px; line-height: 1.6;">
+      A real estate builder is responsible for transforming blueprints into reality—overseeing construction, ensuring quality standards, managing labor, materials, safety protocols, and adhering to regulatory requirements. Their work involves collaboration with architects, engineers, contractors, and government authorities to deliver projects that meet both functional and aesthetic expectations.
+
+      With growing demand for modern and sustainable living spaces, today’s builders are also focusing on eco-friendly designs, smart infrastructure, and luxury amenities. Reputed builders often have a portfolio of completed projects that showcase their expertise, reliability, and commitment to customer satisfaction.
+    </p>
+  </div>
+
+  
+  <div style="flex: 1; min-width: 300px;">
+    <table style="width: 60%; min-height:100px;margin: -100px;margin-left:-10px;border-collapse: collapse; border: 1px solid #ccc; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #41be22e9;">
+      <thead style="background-color: #e6f0ff;">
+        <tr>
+          <th style="padding: 20px; border: 1px solid #ddd; text-align: left; font-size: 20px;">Online Realestate Services</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">PLOTS</td></tr>
+        <td style="padding: 18px; border: 1px solid #ebeeeb;">HOUSES</td></tr>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">DUPLEX APRTMENTS</td></tr>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">FUNISHED</td></tr>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">ESTATES</td></tr>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">ENGINEERING</td></tr>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">FARM HOUSES</td></tr>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">FLATS</td></tr>
+        <tr><td style="padding: 18px; border: 1px solid #ddd;">VILLAS</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+</section>
+<section style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 40px;">
+  <div style="flex: 1; min-width: 300px; padding: 20px; background-color: rgb(78, 89, 208); border-radius: 12px; color: white;">
+    <h1 style="font-size: 36px; margin-bottom: 24px;">✅ Choosing the Right Builder</h1>
+    <h2 style="font-size: 28px; margin-bottom: 18px;">A reputed real estate builder brings:</h2>
+  
+    <p style="font-size: 20px; line-height: 1.8; margin-bottom: 24px;">
+      Experience & trust<br>
+
+      Transparent dealings<br>
+      
+      On-time delivery<br>
+      
+      High-quality construction<br>
+      
+      Customer-focused service<br>
+    </p>
+  
+    <p style="font-size: 20px; line-height: 1.8; margin-bottom: 24px;">
+      <strong>🏙 Role in Urban Growth</strong>With the rapid pace of urbanization, builders are instrumental in developing smart cities, eco-friendly communities, and modern infrastructures. Their innovation shapes how people live, work, and connect—offering everything from budget apartments to luxury villas, office spaces to retail hubs.
+      
+    </p>
+  
+    <p style="font-size: 20px; line-height: 1.8;">
+      <strong>Affordable Housing Initiatives:</strong><br>
+      Government programs like Pradhan Mantri Awas Yojana (PMAY) are expanding affordable housing, especially in tier-2 and tier-3 cities, supported by tax benefits and subsidies. ​
+    </p>
+  </div>
+  <div style="flex: 1; min-width: 300px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+    <div style="width: 300px; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: white; text-align: center;">
+      <h3>APARTMENTS</h3>
+      <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: auto;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyY2j9wAB7TiCtO8Arohh-Ddy_sUc5hO_WAQ&s" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+    <div style="width: 300px; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: white; text-align: center;">
+      <h3>DUPLEX APTS</h3>
+      <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: auto;">
+        <img src="https://live.staticflickr.com/65535/48309550786_ed5785779e_b.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+    <div style="width: 300px; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: white; text-align: center;">
+      <h3>FURNISHED</h3>
+      <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: auto;">
+        <img src="https://pd.w.org/2024/01/64565b9c7d98d71b3.40210501.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+    <div style="width: 300px; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: white; text-align: center;">
+      <h3>HOUSE</h3>
+      <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: auto;">
+        <img src="https://live.staticflickr.com/3195/3016945334_41247b9521_b.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+    <div style="width: 300px; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: white; text-align: center;">
+      <h3>LUXURY Apts</h3>
+      <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: auto;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStvJ0mPA_MvB6vFse1GH6iOx4atPKthAxjAQ&s" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+    <div style="width: 300PX; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: white; text-align: center;">
+      <h3>VILLAS</h3>
+      <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: auto;">
+        <img src="https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcHg1OTk4MzUtaW1hZ2Uta3d5cDQ3dHAuanBn.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+  </div>
+</section>
+<section style="padding: 40px; background-color: #f0f2f5;">
+  <h1 style="text-align: center; font-size: 32px; margin-bottom: 30px;">Our Documents</h1>
+
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+    <div style="width: 220px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+      <img src="https://cdn-icons-png.flaticon.com/512/196/196348.png" alt="HMDA Act Book Logo" style="width: 80px; height: 80px; margin-bottom: 15px;">
+      <h3>HMDA Act Book</h3>
+    </div>
+    <div style="width: 220px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="CTS Logo" style="width: 80px; height: 80px; margin-bottom: 15px;">
+      <h3>CTS - HMA</h3>
+    </div>
+    <div style="width: 220px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+      <img src="https://cdn-icons-png.flaticon.com/512/854/854894.png" alt="Maps Logo" style="width: 80px; height: 80px; margin-bottom: 15px;">
+      <h3>Maps</h3>
+    </div>
+    <div style="width: 220px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+      <img src="https://cdn-icons-png.flaticon.com/512/3039/3039409.png" alt="Directories Logo" style="width: 80px; height: 80px; margin-bottom: 15px;">
+      <h3>Directories</h3>
+    </div>
+
+  </div>
+</section>
+
+<section style="display: flex; justify-content: center; padding: 20px;">
+  <div style="display: flex; flex-wrap: wrap; gap: 0; width: 1460px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); background-color: white;">
+    
+    <div style="flex: 1 1 550px; padding: 20px;">
+      <p style="font-size: 20px; line-height: 1.8;">
+        <strong>🏗 Construction Quality</strong><br>
+        Use of High-Quality Materials – Top builders never cut corners on concrete, steel, wiring, etc.<br>
+        Attention to Detail – Finishing work like flooring, cabinetry, painting, and fittings is consistently well-done.
+      </p>
+      <p style="font-size: 20px; line-height: 1.8;">
+        <strong>🛠 Reputation & Track Record</strong><br>
+        Successful Projects Delivered – Look for timely delivery and no major complaints.<br>
+        Customer Reviews & Word of Mouth – Happy homeowners = reliable builder.
+      </p>
+      <p style="font-size: 20px; line-height: 1.8;">
+        <strong>🕒 Timely Delivery</strong><br>
+        On-Schedule Completion – Reliable builders stick to the promised possession dates.<br>
+        Efficient Project Management – They manage construction phases smartly to avoid unnecessary delays.
+      </p>
+      <p style="font-size: 20px; line-height: 1.8;">
+        <strong>🧑‍💼 Customer Service</strong><br>
+        Responsive Support – Queries and issues handled promptly during and post-purchase.<br>
+        Post-Sale Service – Dedicated team for possession, defects liability period, etc.
+      </p>
+    </div>
+    <div style="flex: 1 1 550px;">
+      <img src="https://assets.site-static.com/userFiles/4918/image/Photo-Blog/Photos-_Blogs_1678520315.jpg"
+           style="width: 100%; height: 100%; max-height: 100%; object-fit: cover;">
+    </div>
+
+  </div>
+</section>
+<section style="padding: 60px 20px; background-color: #f4f6f8; font-family: 'Segoe UI', sans-serif;">
+  <h2 style="text-align: center; font-size: 36px; margin-bottom: 40px; color: #222;">Architects, Builders & Kitchen Design</h2>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 40px; max-width: 1400px; margin: 0 auto;">
+    <div style="flex: 1 1 60%; min-width: 500px; display: flex; flex-direction: column; justify-content: stretch;">
+      <h3 style="font-size: 24px; margin-bottom: 20px;">🧩 How They Work Together</h3>
+      <table style="flex: 1; height: 100%; width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; font-size: 17px;">
+        <thead style="background-color: #004aad; color: white;">
+          <tr>
+            <th style="padding: 40px; text-align: left;">Role</th>
+            <th style="padding: 40px; text-align: left;">Contribution</th>
+            <th style="padding: 40px; text-align: left;">Collaborates With</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 40px;">Architect</td>
+            <td style="padding: 40px;">Vision, structure, layout</td>
+            <td style="padding: 40px;">Builders, Interior Designers</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 40px;">Builder</td>
+            <td style="padding: 40px;">Physical construction</td>
+            <td style="padding: 40px;">Architects, Kitchen Designers</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 40px;">Kitchen Designer</td>
+            <td style="padding: 40px;">Interior functionality & aesthetics</td>
+            <td style="padding: 40px;">Architects, Builders</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 40px;">Interior Designer</td>
+            <td style="padding: 40px;">Color schemes, textures, decor</td>
+            <td style="padding: 40px;">Architects, Builders</td>
+          </tr>
+          <tr>
+            <td style="padding: 40px;">Project Manager</td>
+            <td style="padding: 40px;">Timeline, budget, team coordination</td>
+            <td style="padding: 40px;">All stakeholders</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="flex: 1 1 35%; min-width: 320px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px;">
+      <div style="flex: 1; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
+        <h3 style="font-size: 20px; margin-bottom: 10px;">🏛 Architects</h3>
+        <ul style="font-size: 15px; line-height: 1.7; color: #444; padding-left: 20px;">
+          <li>Innovative space planning</li>
+          <li>Functional & aesthetic design</li>
+          <li>Eco-conscious architecture</li>
+          <li>Compliance with local codes</li>
+        </ul>
+      </div>
+      <div style="flex: 1; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
+        <h3 style="font-size: 20px; margin-bottom: 10px;">🏗 Builders</h3>
+        <ul style="font-size: 15px; line-height: 1.7; color: #444; padding-left: 20px;">
+          <li>Reliable construction quality</li>
+          <li>Timely project completion</li>
+          <li>Legal and regulatory transparency</li>
+          <li>Integrated infrastructure solutions</li>
+        </ul>
+      </div>
+      <div style="flex: 1; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
+        <h3 style="font-size: 20px; margin-bottom: 10px;">🍽 Kitchen Design</h3>
+        <ul style="font-size: 15px; line-height: 1.7; color: #444; padding-left: 20px;">
+          <li>Ergonomic layouts</li>
+          <li>Custom modular cabinetry</li>
+          <li>Durable materials & finishes</li>
+          <li>Smart appliances integration</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+<section style="padding: 60px 20px; background-color: #f4f6f8; font-family: 'Segoe UI', sans-serif;">
+  <h2 style="text-align: center; font-size: 32px; margin-bottom: 40px; color: #222;">📚 Related Articles on Real Estate Builders</h2>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1200px; margin: 0 auto;">
+    
+    <!-- Smaller Circular Article Card 1 -->
+    <div style="background: white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 160px; height: 160px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+      <img src="https://img.icons8.com/ios-filled/50/004aad/blueprint.png" alt="Blueprint Icon" style="width: 32px; margin-bottom: 8px; border-radius: 50%;">
+      <h3 style="font-size: 12px; color: #004aad;">Top 10 Qualities in a Builder</h3>
+    </div>
+
+    <!-- Smaller Circular Article Card 2 -->
+    <div style="background: white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 160px; height: 160px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+      <img src="https://img.icons8.com/ios-filled/50/004aad/contract.png" alt="RERA Icon" style="width: 32px; margin-bottom: 8px; border-radius: 50%;">
+      <h3 style="font-size: 12px; color: #004aad;">Why RERA Approval Matters</h3>
+    </div>
+
+    <!-- Smaller Circular Article Card 3 -->
+    <div style="background: white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 160px; height: 160px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+      <img src="https://img.icons8.com/ios-filled/50/607d8b/voice-presentation.png" alt="Smart Home Icon" style="width: 32px; margin-bottom: 8px; border-radius: 50%;">
+      <h3 style="font-size: 12px; color: #004aad;">Smart Homes by Modern Builders</h3>
+    </div>
+
+    <!-- Smaller Circular Article Card 4 -->
+    <div style="background: white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 160px; height: 160px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+      <img src="https://img.icons8.com/ios-filled/50/004aad/to-do.png" alt="Checklist Icon" style="width: 32px; margin-bottom: 8px; border-radius: 50%;">
+      <h3 style="font-size: 12px; color: #004aad;">Questions to Ask Your Builder</h3>
+    </div>
+
+  </div>
+</section>
+<section style="padding: 80px 20px; background-color: #ffffff; font-family: 'Segoe UI', sans-serif;">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
+      
+      <!-- Text Content -->
+      <div style="flex: 1 1 500px;">
+        <h2 style="font-size: 36px; color: #004aad; margin-bottom: 20px;">🏗 About Us</h2>
+        <p style="font-size: 16px; line-height: 1.6; color: #444;">
+          At <strong>Future Foundations Builders</strong>, we are more than just real estate developers — we are dream enablers. With over a decade of experience, we specialize in crafting homes and commercial spaces that blend innovative design, sustainability, and timeless value.
+        </p>
+        <p style="font-size: 16px; line-height: 1.6; color: #444; margin-top: 15px;">
+          Our team of architects, engineers, and designers work hand-in-hand to ensure each project meets the highest standards of quality and compliance. Whether it's luxury residences, modern smart homes, or eco-friendly communities, we build with purpose and passion.
+        </p>
+        <p style="font-size: 16px; line-height: 1.6; color: #444; margin-top: 15px;">
+          Trust, transparency, and customer satisfaction are the cornerstones of everything we do. Join us in building a better tomorrow — one property at a time.
+        </p>
+      </div>
+      
+      <!-- Image or Illustration -->
+      <div style="flex: 1 1 400px; text-align: center;">
+        <img src="https://img.icons8.com/clouds/500/real-estate.png" alt="About Us Real Estate" style="max-width: 100%; height: auto; border-radius: 16px;">
+      </div>
+      
+    </div>
+</section>
+  
+<section style="padding: 80px 20px; background-color: #f9fbfc; font-family: 'Segoe UI', sans-serif;">
+    <h2 style="text-align: center; font-size: 36px; color: #004aad; margin-bottom: 40px;">🏘 Our Properties</h2>
+    
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+  
+      <!-- Property Card 1 -->
+      <div style="background: white; border-radius: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); width: 320px; overflow: hidden;">
+        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be" alt="Luxury Apartment" style="width: 100%; height: 200px; object-fit: cover;">
+        <div style="padding: 20px;">
+          <h3 style="font-size: 18px; color: #004aad; margin-bottom: 10px;">Skyline Residences</h3>
+          <p style="font-size: 14px; color: #555;">2 & 3 BHK luxury apartments with smart home features and a skyline view in the heart of the city.</p>
+          <a href="#" style="display: inline-block; margin-top: 15px; color: #004aad; text-decoration: underline;">View Details</a>
+        </div>
+      </div>
+  
+      <!-- Property Card 2 -->
+      <div style="background: white; border-radius: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); width: 320px; overflow: hidden;">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="Villas" style="width: 100%; height: 200px; object-fit: cover;">
+        <div style="padding: 20px;">
+          <h3 style="font-size: 18px; color: #004aad; margin-bottom: 10px;">Palm Grove Villas</h3>
+          <p style="font-size: 14px; color: #555;">Spacious 4 BHK villas with private gardens and premium clubhouse amenities.</p>
+          <a href="#" style="display: inline-block; margin-top: 15px; color: #004aad; text-decoration: underline;">View Details</a>
+        </div>
+      </div>
+      <div style="background: white; border-radius: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); width: 320px; overflow: hidden;">
+        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994" alt="Affordable Housing" style="width: 100%; height: 200px; object-fit: cover;">
+        <div style="padding: 20px;">
+          <h3 style="font-size: 18px; color: #004aad; margin-bottom: 10px;">Harmony Heights</h3>
+          <p style="font-size: 14px; color: #555;">Affordable housing with modern design, ideal for first-time homebuyers and families.</p>
+          <a href="#" style="display: inline-block; margin-top: 15px; color: #004aad; text-decoration: underline;">View Details</a>
+        </div>
+      </div>
+  
+    </div>
+</section>
+<section style="padding: 80px 20px; background-color: #f4f6f8; font-family: 'Segoe UI', sans-serif;">
+    <h2 style="text-align: center; font-size: 36px; color: hsl(240, 7%, 3%); margin-bottom: 60px;">🏗 Our Projects</h2>
+  
+    <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; display: flex; flex-wrap: wrap; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914" alt="Urban Rise" style="width: 100%; max-width: 400px; object-fit: cover;">
+        <div style="padding: 30px; flex: 1;">
+          <h3 style="font-size: 22px; color: #004aad;">Urban Rise Towers</h3>
+          <p style="font-size: 15px; color: #555; margin: 15px 0;">A premium high-rise community with skyline views and luxury amenities.</p>
+          <p style="font-size: 14px; color: #888;">📍 Sector 45, New City</p>
+        </div>
+      </div>
+      <div style="background: white; border-radius: 20px; overflow: hidden; display: flex; flex-wrap: wrap; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
+        <img src="https://images.pexels.com/photos/15793177/pexels-photo-15793177/free-photo-of-valley-and-green-mountains-at-dawn.jpeg" alt="Eco Valley" style="width: 100%; max-width: 400px; object-fit: cover;">
+        <div style="padding: 30px; flex: 1;">
+          <h3 style="font-size: 22px; color: #004aad;">Eco Valley Greens</h3>
+          <p style="font-size: 15px; color: #555; margin: 15px 0;">Modern villas in nature-inspired settings for a green, serene lifestyle.</p>
+          <p style="font-size: 14px; color: #888;">📍 Riverdale West</p>
+        </div>
+      </div>
+  
+      <!-- Project Block 3 -->
+      <div style="background: white; border-radius: 20px; overflow: hidden; display: flex; flex-wrap: wrap; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="Skyline Residency" style="width: 100%; max-width: 400px; object-fit: cover;">
+        <div style="padding: 30px; flex: 1;">
+          <h3 style="font-size: 22px; color: #004aad;">Skyline Residency</h3>
+          <p style="font-size: 15px; color: #555; margin: 15px 0;">Luxury apartments that offer breathtaking views and premium living.</p>
+          <p style="font-size: 14px; color: #888;">📍 Marina District</p>
+        </div>
+      </div>
+  
+    </div>
+</section>
+  
+  
+<script>
+  function toggleMenu() {
+    var menu = document.getElementById('mobileMenu');
+    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  function toggleSub(anchor) {
+    var submenu = anchor.nextElementSibling;
+    submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+  }
+   document.querySelectorAll("li").forEach(li => {
+      li.addEventListener("mouseover", () => {
+         const ul = li.querySelector("ul");
+         if(ul) ul.style.display = "block";
+      });
+      li.addEventListener("mouseleave", () => {
+         const ul = li.querySelector("ul");
+         if(ul) ul.style.display = "none";
+      });
+   });
+  function toggleMenu() {
+    var menu = document.getElementById('mobileMenu');
+    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  function toggleSub(anchor) {
+    var submenu = anchor.nextElementSibling;
+    submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+  }
+   document.querySelectorAll("li").forEach(li => {
+      li.addEventListener("mouseover", () => {
+         const ul = li.querySelector("ul");
+         if(ul) ul.style.display = "block";
+      });
+      li.addEventListener("mouseleave", () => {
+         const ul = li.querySelector("ul");
+         if(ul) ul.style.display = "none";
+      });
+   });
+</script>
+
+
+
+
+
+
+
+
+<!-- footer -->
+<footer style="background-color:#2b2d42;color:#fff;padding:60px 20px 30px;font-family:'Poppins',sans-serif;">
+  <div style="max-width: auto;">
+      <!-- Main Footer Row - Now using CSS Grid for equal height columns -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:40px;margin-bottom:40px;align-items:start;">
+          <!-- Left Side - Hitashi Homes Text -->
+          <div style="display:flex;flex-direction:column;height:100%;">
+              <h2 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Hitashi RealEstate</h2>
+              <p style="color:#ccc;line-height:1.6;margin-bottom:20px;flex-grow:1;">Your premier destination for all real estate needs. From residential to commercial, we have the perfect property for you. Whether you're looking for luxury villas, budget apartments, or profitable commercial investments, our expert team is here to guide you through every step of your real estate journey. Experience hassle-free transactions, verified listings, and personalized service tailored just for you.</p>
+          </div>
+
+          <!-- Middle Section - Property Columns (50% width) -->
+          <div style="flex:2; min-width:500px; display:flex; gap:40px; justify-content:space-between;">
+              <!-- Residential Column -->
+              <div style="flex:1;">
+                  <h3 style="font-size:1.2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Residential</h3>
+                  <ul style="list-style-type:none;padding:0;margin:0;">
+                      <li style="margin-bottom:12px;"><a href="highriseapartments.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">HighRise Apartments</a></li>
+                      <li style="margin-bottom:12px;"><a href="villa.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Villas</a></li>
+                      <li style="margin-bottom:12px;"><a href="farmhouse.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Farm Houses</a></li>
+                      <li style="margin-bottom:12px;"><a href="builders.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">RealEstate Builders</a></li>
+                      <li style="margin-bottom:12px;"><a href="lands.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Land Development Sites</a></li>
+                      <li style="margin-bottom:12px;"><a href="Buy.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Buy</a></li>
+                      <li><a href="#" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Rent</a></li>
+                  </ul>
+              </div>
+
+              <!-- Commercial Column -->
+              <div style="flex:1;">
+                  <h3 style="font-size:1.2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Commercial</h3>
+                  <ul style="list-style-type:none;padding:0;margin:0;">
+                      <li style="margin-bottom:12px;"><a href="office.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Offices</a></li>
+                      <li style="margin-bottom:12px;"><a href="retails.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Retails</a></li>
+                      <li style="margin-bottom:12px;"><a href="malls.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Malls</a></li>
+                      <li style="margin-bottom:12px;"><a href="functionhalls.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Function Halls</a></li>
+                      <li style="margin-bottom:12px;"><a href="hospitals" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Hospitals</a></li>
+                      <li style="margin-bottom:12px;"><a href="postRent.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Post for Rent</a></li>
+                      <li><a href="lands.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Agriculture Lands</a></li>
+                  </ul>
+              </div>
+
+              <!-- Company Column -->
+              <div style="flex:1;">
+                  <h3 style="font-size:1.2rem;margin-bottom:20px;color:#e63946;text-transform:uppercase;">Company</h3>
+                  <ul style="list-style-type:none;padding:0;margin:0;">
+                      <li style="margin-bottom:12px;"><a href="index.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">HomePage</a></li>
+                      <li style="margin-bottom:12px;"><a href="about.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">About Us</a></li>
+                      <li style="margin-bottom:12px;"><a href="Login.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Login</a></li>
+                      <li style="margin-bottom:12px;"><a href="Register.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Register</a></li>
+                      <li style="margin-bottom:12px;"><a href="contact.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Contact</a></li>
+                      <li style="margin-bottom:12px;"><a href="Sell.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Postproperty</a></li>
+                      <li><a href="about.html" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Terms of Service</a></li>
+                  </ul>
+              </div>
+          </div>
+
+          <!-- Right Side - Contact Info with Social Icons (25% width) -->
+          <div style="flex:1; min-width:250px; max-width:300px; margin-left:30%;">
+              <div style="display:flex;align-items:center;margin-bottom:20px;">
+                  <img loading="lazy" src="images/home icon.png" alt="Hitashi RealEstate Logo" style="width:50px;height:50px;margin-right:15px;">
+                  <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:#e63946;">Hitashi RealEstate</h2>
+              </div>
+              <div style="margin-bottom:25px;">
+                  <p style="color:#ccc;margin-bottom:10px;"><i class="fas fa-map-marker-alt" style="color:#e63946;margin-right:8px;"></i> 985,Pragathi Nagar,<br>Kukatpally,Hyderabad,500090</p>
+                  <p style="color:#ccc;margin-bottom:10px;"><i class="fas fa-phone" style="color:#e63946;margin-right:8px;"></i> 8790170525</p>
+                  <p style="color:#ccc;"><i class="fas fa-envelope" style="color:#e63946;margin-right:8px;"></i> contact@hitashirealestate.com</p>
+              </div>
+              <!-- Social Media Icons -->
+              <h3 style="font-size:1.1rem;margin-bottom:15px;color:#e63946;">Follow Us</h3>
+              <div style="display:flex;gap:15px;justify-content:flex-start;">
+                  <a href="https://www.facebook.com/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/733/733547.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                  <a href="https://x.com/?lang=en-in" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/733/733579.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                  <a href="https://www.instagram.com/accounts/login/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/733/733558.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                  <a href="https://www.linkedin.com/feed/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/174/174857.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+                  <a href="https://www.youtube.com/" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background-image:url('https://cdn-icons-png.flaticon.com/512/1384/1384060.png');background-size:cover;background-position:center;border-radius:50%;transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'"></a>
+              </div>
+          </div>
+      </div>
+
+      <!-- Bottom Line -->
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:30px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;">
+      <p style="color:#ccc;margin:0;">&copy; 2025 Hitashi RealEstate. All rights reserved.</p>
+      <div style="display:flex;gap:20px;">
+          <a href="#" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Privacy Policy</a>
+          <a href="#" style="color:#ccc;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='#ccc'">Terms of Service</a>
+      </div>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+</body>
+</html>
